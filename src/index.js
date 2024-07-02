@@ -33,6 +33,6 @@ app.use('/api/recipe', recipeRouter);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
-});
+}); // 뭔데
 
 export default app;
