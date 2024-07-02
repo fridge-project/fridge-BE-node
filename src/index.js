@@ -9,6 +9,7 @@ import connectDB from './config/db.js';
 import authRouter from './routes/authRouter.js';
 import fridgeRouter from './routes/fridgeRouter.js';
 import recipeRouter from './routes/recipeRouter.js';
+import initRouter from './routes/initRouter.js';
 
 const app = express();
 connectDB();
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/fridge', fridgeRouter);
 app.use('/api/recipe', recipeRouter);
+app.use('/init', initRouter);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');

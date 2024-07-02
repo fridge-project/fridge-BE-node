@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ProcessSchema = new mongoose.Schema({
-  recipe_code : { type: Number, require: true, unique: true },
+  recipe_code : { type: Number, require: true },
   order_num : { type: Number, require: true },
   detail : { type: String },
   imageURL : { type: String },
