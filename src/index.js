@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/fridge', fridgeRouter);
-app.use('/api/recipe', recipeRouter);
+app.use('/api/recipes', recipeRouter);
 app.use('/init', initRouter);
 
 app.listen(3000, () => {
