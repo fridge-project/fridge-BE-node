@@ -57,5 +57,4 @@ router.get('/ingredients', async (req, res) => {
   }
 })
 
-
 export default router;

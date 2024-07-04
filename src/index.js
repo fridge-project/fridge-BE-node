@@ -10,6 +10,7 @@ import authRouter from './routes/authRouter.js';
 import fridgeRouter from './routes/fridgeRouter.js';
 import recipeRouter from './routes/recipeRouter.js';
 import initRouter from './routes/initRouter.js';
+import ingredientRouter from './routes/ingredientRouter.js';
 
 const app = express();
 connectDB();
@@ -31,10 +32,11 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/fridge', fridgeRouter);
 app.use('/api/recipes', recipeRouter);
+app.use('/api/ingredients', ingredientRouter);
 app.use('/init', initRouter);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
-}); // 뭔데
+});
 
 export default app;
