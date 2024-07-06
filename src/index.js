@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRouter);
-app.use('/api/fridge', fridgeRouter);
+app.use('/api/fridge', passport.authenticate('jwt', { session : false }), fridgeRouter);
 app.use('/api/recipes', recipeRouter);
 app.use('/api/ingredients', ingredientRouter);
 app.use('/init', initRouter);
