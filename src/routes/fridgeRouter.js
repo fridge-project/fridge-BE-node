@@ -22,21 +22,45 @@ router.post('/', async (req, res) => { // 보유재료 등록
 
     const fridge = await newIngredient.save();
 
-  // name : { type: String, required: true},
-	// memo : { type: String },
-	// storage : { type: String },
-	// exp : { type: String },
-	// date : { type: String },
-	// imageURL : { type: String },
-  // ingredient_id : { type: mongoose.Schema.Types.ObjectId, ref: "ingredient"}
-
     return res.send(fridge);
   }
   catch(err) {
     return res.status(500).send(err);
-    // return res.status(500).send("ingredients 불러오기 실패");
   }
 
+});
+
+router.put('/:id', async (req, res) => { // 보유재료 수정
+  try{
+    const { name, memo, storage, exp, date, imageURL } = req.body;
+    const { id } = req.params;
+
+    const newIngredient = { name, memo, storage, exp, date, imageURL };
+
+    const updateFridge = await Fridge.findOneAndUpdate(
+      { _id: id }, // 검색 조건
+      newIngredient, // 업데이트할 데이터
+      { new: true, runValidators: true } // 옵션
+    );
+
+    res.send(updateFridge);
+  }
+  catch(err) {
+    return res.status(500).send(err);
+  }
+});
+
+router.delete('/:id', async (req, res) => { // 보유재료 삭제
+  try{
+    const { id } = req.params;
+
+    await Fridge.findOneAndDelete({ _id: id }); // 검색 조건
+
+    res.status(200).send("delete completely");
+  }
+  catch(err) {
+    return res.status(500).send(err);
+  }
 });
 
 export default router;
