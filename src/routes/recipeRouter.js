@@ -14,4 +14,17 @@ router.get('/', async (req, res) => { // 전체 레시피 조회
   }
 });
 
+router.get('/:recipe_code', async (req, res) => { // 레시피 과정 상세 보기
+  try{
+    const { recipe_code } = req.params;
+
+    const process = await Process.find({ recipe_code: recipe_code });
+
+    return res.send(process);
+  }
+  catch(err) {
+    return res.status(500).send("process 불러오기 실패");
+  }
+});
+
 export default router;
