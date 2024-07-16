@@ -10,7 +10,7 @@ router.get('/', async (req, res) => { // 좋아요 누른 레시피 보기
   try {
     const likes = await Like.find({ user_id: req.user._id });
 
-    return res.send(likes);
+    return res.status(200).send(likes);
   }
   catch(err) {
     return res.status(500).send("likes 불러오기 실패");
