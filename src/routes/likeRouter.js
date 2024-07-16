@@ -21,18 +21,19 @@ router.post('/:recipe_code', async (req, res) => {
   try {
     const { recipe_code } = req.params;
 
-    const like = await Like.find({ user_id: req.user._id, recipe_id: recipe_code });
+    const like = await Like.findOne({ user_id: req.user._id, recipe_id: recipe_code });
 
-    if(like.length) { // 이미 좋아요 눌린 경우
-      await Like.findOneAndDelete(like); // 검색 조건
+    if(like) { // 이미 좋아요 눌린 경우
+      await Like.findByIdAndDelete(like._id);
+      return res.status(200).send("좋아요 취소 성공");
     }
     else { // 좋아요 안눌린 경우
       const newLike = new Like ({ user_id: req.user._id, recipe_id: recipe_code });
 
       const like = await newLike.save();
+      return res.status(200).send("좋아요 성공");
     }
 
-    res.status(200).send("좋아요 성공");
   }
   catch(err) {
     return res.status(500).send("좋아요 실패");
