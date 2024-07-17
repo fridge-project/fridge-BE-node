@@ -12,6 +12,7 @@ import recipeRouter from './routes/recipeRouter.js';
 import initRouter from './routes/initRouter.js';
 import ingredientRouter from './routes/ingredientRouter.js';
 import likeRouter from './routes/likeRouter.js';
+import commentRouter from './routes/commentRouter.js';
 
 const app = express();
 connectDB();
@@ -35,6 +36,7 @@ app.use('/api/fridge', passport.authenticate('jwt', { session : false }), fridge
 app.use('/api/recipes', recipeRouter);
 app.use('/api/ingredients', ingredientRouter);
 app.use('/api/like', passport.authenticate('jwt', { session : false }), likeRouter);
+app.use('/api/comment', passport.authenticate('jwt', { session : false }), commentRouter);
 
 app.use('/init', initRouter);
 
