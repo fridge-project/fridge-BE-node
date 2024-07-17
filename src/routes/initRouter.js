@@ -7,7 +7,7 @@ import recipes from '../js/recipes.js';
 
 import RecipeIngredient from "../models/recipe_ingredient.js";
 import Process from '../models/Process.js';
-import Recipe from '../models/Recipe.js';
+import Recipe from '../models/recipe.js';
 import Ingredient from '../models/ingredient.js';
 
 router.get('/', (req, res) => {

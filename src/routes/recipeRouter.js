@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import Process from '../models/Process.js';
-import Recipe from '../models/Recipe.js';
+import Recipe from '../models/recipe.js';
 const router = Router();
 
 router.get('/', async (req, res) => { // 전체 레시피 조회
