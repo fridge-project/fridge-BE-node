@@ -18,6 +18,26 @@ router.post('/:recipe_id', async (req, res) => { // 댓글 작성
   }
 });
 
+router.put('/:id', async (req, res) => { // 댓글 수정
+  try {
+    const { detail, grade, imageURL } = req.body;
+    const { id } = req.params;
+
+    const newComment = { detail, grade, imageURL };
+
+    const updateComment = await Comment.findOneAndUpdate(
+      { _id: id },
+      newComment,
+      { new: true, runValidators: true }
+    );
+
+    res.send(updateComment);
+  }
+  catch(err) {
+    return res.status(500).send(err);
+  }
+})
+
 router.delete('/:_id', async (req, res) => { // 댓글 삭제
   try{
     const { _id } = req.params;
