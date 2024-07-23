@@ -1,7 +1,12 @@
 import { Router } from 'express';
+import passport from 'passport';
+const router = Router();
+
 import Process from '../models/Process.js';
 import Recipe from '../models/recipe.js';
-const router = Router();
+import Comment from '../models/comment.js';
+import Like from '../models/like.js';
+import Favorite from '../models/favorite.js';
 
 router.get('/', async (req, res) => { // 전체 레시피 조회
   try{
@@ -14,16 +19,22 @@ router.get('/', async (req, res) => { // 전체 레시피 조회
   }
 });
 
-router.get('/:recipe_code', async (req, res) => { // 레시피 과정 상세 보기
+router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), async (req, res) => { // 레시피 과정 상세 보기
   try{
     const { recipe_code } = req.params;
 
-    const process = await Process.find({ recipe_code: recipe_code });
+    const recipe = await Recipe.findOne({ recipe_code });
+    const recipe_id = recipe._id;
 
-    return res.send(process);
+    const process = await Process.find({ recipe_code });
+    const comment = await Comment.findOne({ recipe_id, user_id: req.user._id });
+    const like = await Like.findOne({ recipe_id, user_id: req.user._id });
+    const favorite = await Favorite.findOne({ recipe_id, user_id: req.user._id });
+
+    return res.send({process, comment, like, favorite});
   }
   catch(err) {
-    return res.status(500).send("process 불러오기 실패");
+    return res.status(500).send(err); // "process 불러오기 실패"
   }
 });
 
