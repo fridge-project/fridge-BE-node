@@ -7,6 +7,7 @@ import Recipe from '../models/recipe.js';
 import Comment from '../models/comment.js';
 import Like from '../models/like.js';
 import Favorite from '../models/favorite.js';
+import User from '../models/User.js';
 
 router.get('/', async (req, res) => { // 전체 레시피 조회
   try{
@@ -26,12 +27,19 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
     const recipe = await Recipe.findOne({ recipe_code });
     const recipe_id = recipe._id;
 
+    const user = await User.findOne({ _id: req.user._id });
+    const username = user.username;
+
+    const comments = await Comment.find({ recipe_id });
+    const grade = comments.reduce((res, comment) => res + comment.grade, 0);
+    const avg = (grade / comments.length);
+
     const process = await Process.find({ recipe_code });
     const comment = await Comment.findOne({ recipe_id, user_id: req.user._id });
     const like = await Like.findOne({ recipe_id, user_id: req.user._id });
     const favorite = await Favorite.findOne({ recipe_id, user_id: req.user._id });
 
-    return res.send({process, comment, like, favorite});
+    return res.send({process, comment, like, favorite, username, avg});
   }
   catch(err) {
     return res.status(500).send(err); // "process 불러오기 실패"
