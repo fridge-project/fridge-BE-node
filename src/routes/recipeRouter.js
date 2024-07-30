@@ -32,17 +32,26 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
     const updatedComments = await Promise.all(comments.map(async (comment) => {
       const user = await User.findOne({ _id: comment.user_id });
       const username = user.username;
+      const email = user.email;
       
-      // 일시적으로 username을 추가
-      return { ...comment._doc, username }; // ._doc을 사용하여 원래의 comment 데이터를 복사
+      // 일시적으로 username, email을 추가
+      return { ...comment._doc, username, email }; // ._doc을 사용하여 원래의 comment 데이터를 복사
     }));
     
-    const grade = comments.reduce((res, comment) => res + comment.grade, 0);
-    const avg = (grade / comments.length);
+    let gradeArr = new Array(6).fill(0);
+    comments.forEach((comment) => {
+      gradeArr[comment.grade]++;
+      gradeArr[0] += comment.grade;
+    })
+
+    gradeArr[0] = (gradeArr[0] / comments.length);
+
+    console.log(gradeArr);
 
     const process = await Process.find({ recipe_code });
 
     const likeAll = await Like.find({ recipe_id });
+
     const likeCount = likeAll.length;
     const like = likeAll.filter((like) => like.user_id.equals(req.user._id));
 
@@ -50,7 +59,7 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
     const favoriteCount = favoriteAll.length;
     const favorite = favoriteAll.filter((favorite) => favorite.user_id.equals(req.user._id));
 
-    return res.send({process, updatedComments, like, favorite, avg, likeCount, favoriteCount});
+    return res.send({process, updatedComments, like, favorite, likeCount, favoriteCount, gradeArr});
   }
   catch(err) {
     return res.status(500).send(err); // "process 불러오기 실패"
