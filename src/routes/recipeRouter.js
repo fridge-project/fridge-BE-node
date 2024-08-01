@@ -29,6 +29,10 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
 
     const comments = await Comment.find({ recipe_id });
 
+    const user = await User.findOne({ _id: req.user._id });
+    const username = user.username;
+    const email = user.email;
+
     const updatedComments = await Promise.all(comments.map(async (comment) => {
       const user = await User.findOne({ _id: comment.user_id });
       const username = user.username;
@@ -46,12 +50,9 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
 
     gradeArr[0] = (gradeArr[0] / comments.length);
 
-    console.log(gradeArr);
-
     const process = await Process.find({ recipe_code });
 
     const likeAll = await Like.find({ recipe_id });
-
     const likeCount = likeAll.length;
     const like = likeAll.filter((like) => like.user_id.equals(req.user._id));
 
@@ -59,7 +60,7 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
     const favoriteCount = favoriteAll.length;
     const favorite = favoriteAll.filter((favorite) => favorite.user_id.equals(req.user._id));
 
-    return res.send({process, updatedComments, like, favorite, likeCount, favoriteCount, gradeArr});
+    return res.send({process, updatedComments, like, favorite, likeCount, favoriteCount, gradeArr, username, email});
   }
   catch(err) {
     return res.status(500).send(err); // "process 불러오기 실패"
