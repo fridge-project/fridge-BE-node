@@ -8,6 +8,7 @@ import Comment from '../models/comment.js';
 import Like from '../models/like.js';
 import Favorite from '../models/favorite.js';
 import User from '../models/User.js';
+import RecipeIngredient from '../models/recipe_ingredient.js';
 
 router.get('/', async (req, res) => { // 전체 레시피 조회
   try{
@@ -26,6 +27,11 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
 
     const recipe = await Recipe.findOne({ recipe_code });
     const recipe_id = recipe._id;
+
+    console.log(recipe_id);
+    const recipe_ingredient = await RecipeIngredient.find({ recipe_id });
+    console.log("zz");
+    console.log(recipe_ingredient);
 
     const comments = await Comment.find({ recipe_id });
 
@@ -48,7 +54,7 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
       gradeArr[0] += comment.grade;
     })
 
-    gradeArr[0] = (gradeArr[0] / comments.length);
+    gradeArr[0] = comments.length == 0 ? 0 : (gradeArr[0] / comments.length);
 
     const process = await Process.find({ recipe_code });
 
