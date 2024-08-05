@@ -1,6 +1,25 @@
 import { Router } from 'express';
 import Comment from '../models/comment.js';
+import Recipe from '../models/recipe.js';
 const router = Router();
+
+router.get('/', async (req, res) => { // 댓글 작성한 레시피 보기
+  try {
+    const comments = await Comment.find({ user_id: req.user_id });
+
+    console.log(comments);
+    const recipes = await Promise.all(
+      comments.map(async (comment) => {
+        const recipe = await Recipe.findOne({ _id: comment.recipe_id });
+        return recipe;
+      })
+    );
+    return res.status(200).send(recipes);
+  }
+  catch(err) {
+    return res.status(500).send("comments 불러오기 실패");
+  }
+})
 
 router.post('/:recipe_id', async (req, res) => { // 댓글 작성
   try{
