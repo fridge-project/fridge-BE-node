@@ -9,6 +9,7 @@ import Like from '../models/like.js';
 import Favorite from '../models/favorite.js';
 import User from '../models/User.js';
 import RecipeIngredient from '../models/recipe_ingredient.js';
+import Fridge from '../models/fridge.js';
 
 router.get('/', async (req, res) => { // 전체 레시피 조회
   try{
@@ -21,7 +22,7 @@ router.get('/', async (req, res) => { // 전체 레시피 조회
   }
 });
 
-router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), async (req, res) => { // 레시피 과정 상세 보기
+router.get('/detail/:recipe_code', passport.authenticate('jwt', { session : false }), async (req, res) => { // 레시피 과정 상세 보기
   try{
     const { recipe_code } = req.params;
 
@@ -70,24 +71,28 @@ router.get('/:recipe_code', passport.authenticate('jwt', { session : false }), a
   }
 });
 
-// // 단일 기능 API
-// app.get('/api/recipe/:id/steps', getRecipeSteps);
-// app.get('/api/recipe/:id/comments', getRecipeComments);
-// app.get('/api/recipe/:id/likes', getRecipeLikes);
+router.get('/available', passport.authenticate('jwt', { session : false }), async (req, res) => {
+  try{
+    // 사용자의 전체 보유재료 조회 -> 이름 배열에 담기.
+    const fridge = await Fridge.find();
 
-// // 복합 API
-// app.get('/api/recipe/:id/details', async (req, res) => {
-//   const recipeId = req.params.id;
-//   const recipeSteps = await getRecipeSteps(recipeId);
-//   const recipeComments = await getRecipeComments(recipeId);
-//   const recipeLikes = await getRecipeLikes(recipeId);
-  
-//   res.json({
-//     steps: recipeSteps,
-//     comments: recipeComments,
-//     likes: recipeLikes
-//   });
-// }); // 둘다 구현하면 좋다!
+    console.log(fridge);
+    const ingredients = fridge.map((ingredient) => {
+      return ingredient.name;
+    })
+    console.log(ingredients);
+
+    // mongoose에서 쿼리문 짜는법 등 방법 찾아보기.
+
+
+    // const recipe = await Recipe.find();
+
+    return res.send("HI");
+  }
+  catch(err) {
+    return res.status(500).send("recipe 불러오기 실패");
+  }
+});
 
 
 export default router;
